@@ -1,4 +1,4 @@
-module github.com/redseverity/cravtool
+module github.com/redseverity/cravdata
 
 go 1.24.4
 
