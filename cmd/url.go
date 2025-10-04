@@ -8,6 +8,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	marker string
+)
+
 // urlCmd represents the url command
 var urlCmd = &cobra.Command{
 	Use: "url [target-url]",
@@ -27,4 +31,5 @@ var urlCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(urlCmd)
+	urlCmd.Flags().StringVarP(&marker, "marker", "m", "", "placeholder for inserting generated words")
 }
