@@ -10,6 +10,7 @@ import (
 
 var (
 	marker string
+	URL    string
 )
 
 // urlCmd represents the url command
@@ -18,11 +19,13 @@ var urlCmd = &cobra.Command{
 	// Short: "",
 	// Long:  ``,
 	Args: func(cmd *cobra.Command, args []string) error {
-		if err := urlvalidator.RequireMinArgs(cmd, args, 1); err != nil {
+		if err := cobra.MinimumNArgs(1)(cmd, args); err != nil {
 			return err
 		}
 
-		if err := urlvalidator.ValidateMarker(args[0], cmd); err != nil {
+		URL = args[0]
+
+		if err := urlvalidator.ValidateMarker(URL, cmd); err != nil {
 			return err
 		}
 
