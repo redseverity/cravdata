@@ -25,6 +25,10 @@ var urlCmd = &cobra.Command{
 
 		URL = args[0]
 
+		if err := urlvalidator.ValidateURL(URL); err != nil {
+			return err
+		}
+
 		if err := urlvalidator.ValidateMarker(URL, cmd); err != nil {
 			return err
 		}
