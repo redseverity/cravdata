@@ -4,7 +4,7 @@ Copyright © 2025 redseverity <red.severity723@passfwd.com>
 package cmd
 
 import (
-	"github.com/redseverity/cravdata/cmd/validators/urlcheck"
+	"github.com/redseverity/cravdata/cmd/validators/urlvalidator"
 	"github.com/spf13/cobra"
 )
 
@@ -18,9 +18,14 @@ var urlCmd = &cobra.Command{
 	// Short: "",
 	// Long:  ``,
 	Args: func(cmd *cobra.Command, args []string) error {
-		if err := urlcheck.RequireMinArgs(cmd, args, 1); err != nil {
+		if err := urlvalidator.RequireMinArgs(cmd, args, 1); err != nil {
 			return err
 		}
+
+		if err := urlvalidator.ValidateMarker(args[0], cmd); err != nil {
+			return err
+		}
+
 		return nil
 	},
 
