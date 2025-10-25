@@ -13,6 +13,8 @@ var (
 	targetURL string
 	marker    string
 	charset   string
+	min       int
+	max       int
 )
 
 // urlCmd represents the url subcommand
@@ -28,15 +30,23 @@ var urlCmd = &cobra.Command{
 
 		targetURL = args[0]
 
-		if err := urlvalidator.ValidateURL(targetURL); err != nil {
+		if err := urlvalidator.URL(targetURL); err != nil {
 			return err
 		}
 
-		if err := urlvalidator.ValidateMarker(targetURL, marker); err != nil {
+		if err := urlvalidator.Marker(targetURL, marker); err != nil {
 			return err
 		}
 
-		if err := urlvalidator.ValidateCharset(&charset); err != nil {
+		if err := urlvalidator.Charset(&charset); err != nil {
+			return err
+		}
+
+		if err := urlvalidator.Min(min, max); err != nil {
+			return err
+		}
+
+		if err := urlvalidator.Max(max, min); err != nil {
 			return err
 		}
 
@@ -52,4 +62,6 @@ func init() {
 	rootCmd.AddCommand(urlCmd)
 	urlCmd.Flags().StringVarP(&marker, "marker", "m", "{BRUTE}", urldocs.Marker)
 	urlCmd.Flags().StringVarP(&charset, "charset", "c", "abc", urldocs.Charset)
+	urlCmd.Flags().IntVarP(&min, "min", "", 1, urldocs.Min)
+	urlCmd.Flags().IntVarP(&max, "max", "", 3, urldocs.Max)
 }

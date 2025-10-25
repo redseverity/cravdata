@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func ValidateMarker(targetURL string, marker string) error {
+func Marker(targetURL string, marker string) error {
 
 	if strings.TrimSpace(marker) == "" {
 		return fmt.Errorf("flag --marker requires a non-empty argument")

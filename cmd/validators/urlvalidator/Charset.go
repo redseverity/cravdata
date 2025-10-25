@@ -1,7 +1,6 @@
 /*
 Copyright © 2025 redseverity <red.severity723@passfwd.com>
 */
-
 package urlvalidator
 
 import (
@@ -12,7 +11,7 @@ import (
 
 // ValidateCharset checks if the provided charset contains only characters
 // allowed by RFC 3986 for use in URLs (both reserved and unreserved).
-func ValidateCharset(charset *string) error {
+func Charset(charset *string) error {
 	// RFC 3986 valid characters:
 	// unreserved  = ALPHA / DIGIT / "-" / "." / "_" / "~"
 	// reserved    = gen-delims / sub-delims

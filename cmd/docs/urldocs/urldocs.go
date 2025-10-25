@@ -20,4 +20,8 @@ return an error and refuse to run.`
 	Marker = `Marker placeholder used in the target template where dynamically generated words 
 will be inserted. By default the marker is "{BRUTE}". Use a custom marker if the
 template uses a different token.`
+
+	Min = "minimum length of generated strings."
+
+	Max = "maximum length of generated strings."
 )
