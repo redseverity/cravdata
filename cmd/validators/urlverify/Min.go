@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 redseverity <red.severity723@passfwd.com>
 */
-package urlvalidator
+package urlverify
 
 import (
 	"fmt"

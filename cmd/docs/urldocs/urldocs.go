@@ -24,4 +24,8 @@ template uses a different token.`
 	Min = "minimum length of generated strings."
 
 	Max = "maximum length of generated strings."
+
+	Timeout = "timeout in seconds for each request"
+
+	Delay = "delay in milliseconds between each request"
 )

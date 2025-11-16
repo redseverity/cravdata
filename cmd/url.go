@@ -5,7 +5,7 @@ package cmd
 
 import (
 	"github.com/redseverity/cravdata/cmd/docs/urldocs"
-	"github.com/redseverity/cravdata/cmd/validators/urlvalidator"
+	"github.com/redseverity/cravdata/cmd/validators/urlverify"
 	"github.com/spf13/cobra"
 )
 
@@ -15,6 +15,8 @@ var (
 	charset   string
 	min       int
 	max       int
+	timeout   int
+	delay     int
 )
 
 // urlCmd represents the url subcommand
@@ -30,23 +32,31 @@ var urlCmd = &cobra.Command{
 
 		targetURL = args[0]
 
-		if err := urlvalidator.URL(targetURL); err != nil {
+		if err := urlverify.URL(targetURL); err != nil {
 			return err
 		}
 
-		if err := urlvalidator.Marker(targetURL, marker); err != nil {
+		if err := urlverify.Marker(targetURL, marker); err != nil {
 			return err
 		}
 
-		if err := urlvalidator.Charset(&charset); err != nil {
+		if err := urlverify.Charset(&charset); err != nil {
 			return err
 		}
 
-		if err := urlvalidator.Min(min, max); err != nil {
+		if err := urlverify.Min(min, max); err != nil {
 			return err
 		}
 
-		if err := urlvalidator.Max(max, min); err != nil {
+		if err := urlverify.Max(max, min); err != nil {
+			return err
+		}
+
+		if err := urlverify.Timeout(timeout); err != nil {
+			return err
+		}
+
+		if err := urlverify.Delay(delay); err != nil {
 			return err
 		}
 
@@ -64,4 +74,6 @@ func init() {
 	urlCmd.Flags().StringVarP(&charset, "charset", "c", "abc", urldocs.Charset)
 	urlCmd.Flags().IntVarP(&min, "min", "", 1, urldocs.Min)
 	urlCmd.Flags().IntVarP(&max, "max", "", 3, urldocs.Max)
+	urlCmd.Flags().IntVarP(&timeout, "timeout", "t", 2, urldocs.Timeout)
+	urlCmd.Flags().IntVarP(&delay, "delay", "d", 0, urldocs.Delay)
 }
