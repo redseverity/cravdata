@@ -6,6 +6,7 @@ package cmd
 import (
 	"github.com/redseverity/cravdata/cmd/docs/urldocs"
 	"github.com/redseverity/cravdata/cmd/validators/urlverify"
+	"github.com/redseverity/cravdata/core/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -36,7 +37,7 @@ var urlCmd = &cobra.Command{
 			return err
 		}
 
-		if err := urlverify.Marker(targetURL, marker); err != nil {
+		if err := urlverify.Marker(&targetURL, marker); err != nil {
 			return err
 		}
 
@@ -64,6 +65,9 @@ var urlCmd = &cobra.Command{
 	},
 
 	RunE: func(cmd *cobra.Command, args []string) error {
+
+		utils.Bruteforce(targetURL, charset, min, max, timeout, delay)
+
 		return nil
 	},
 }
