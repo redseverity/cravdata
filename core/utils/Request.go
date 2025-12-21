@@ -35,8 +35,16 @@ func Request(url string, timeout int) URLCheckResult {
 		}
 	}
 
-	// Set a common User-Agent to avoid being blocked
-	req.Header.Set("User-Agent", "Mozilla/5.0 (compatible; URLChecker/1.0)")
+	// Set a common Firefox Headers to avoid blocked
+	req.Header.Set("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0")
+	req.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
+	req.Header.Set("Accept-Language", "en-US,en;q=0.9")
+	req.Header.Set("Accept-Encoding", "gzip, deflate, br")
+	req.Header.Set("Upgrade-Insecure-Requests", "1")
+	req.Header.Set("Sec-Fetch-Dest", "document")
+	req.Header.Set("Sec-Fetch-Mode", "navigate")
+	req.Header.Set("Sec-Fetch-Site", "none")
+	req.Header.Set("Sec-Fetch-User", "?1")
 
 	resp, err := client.Do(req)
 	if err != nil {
