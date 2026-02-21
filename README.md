@@ -1,87 +1,84 @@
-**cravdata**  — dynamic URL & file brute‑forcing toolkit
+# cravdata
 
-cravdata is a Go tool for directory enumeration on URLs and offline analysis of files/hashes. Instead of relying solely on large static wordlists, cravdata dynamically generates candidates for path discovery and includes modules for processing and analyzing hashes/files. Built for authorized pentests, CTFs, and security labs — efficient, modular, and designed for responsible use.
+**cravdata** — CPU‑bound brute‑force & cryptographic analysis toolkit
+
+cravdata is currently being migrated from **Go to C**.
+
+The project is now focused on **CPU‑intensive brute‑force operations**, targeting:
+
+* Hash analysis and cracking
+* Password‑protected files
+* Cryptographic keyspace exploration
+* Offline security research scenarios
+
+Unlike traditional tools that rely purely on static wordlists, cravdata emphasizes **dynamic candidate generation** and deterministic keyspace traversal optimized for CPU performance.
+
+Built for authorized pentests, CTFs, and security labs — modular, efficient, and designed for responsible use.
 
 ---
 
-## 📦 Installation
+## ⚠️ Project Status
 
-To install `forcepath`, you need to have [Go](https://go.dev/dl/) installed (version 1.16 or higher recommended).
+This project is under active migration to C.
 
-Run the following command to install the tool:
+* The previous Go implementation is being deprecated.
+* The architecture is being redesigned for CPU‑bound workloads.
+* Performance, memory control, and modular parsing are current priorities.
+* CLI structure may evolve during refactoring.
+
+---
+
+## 🛠 Build & Run
+
+The project uses a `Makefile` for compilation and execution.
+
+### Build
 
 ```bash
-go install github.com/redseverity/cravdata@latest
-
+make build
 ```
 
-* Make sure your $GOPATH/bin is in your $PATH.
-
----
-
-## 🔧 Subcommands Guide
-
-### `url`
-
-Defines the target URL to scan.
-
-**Accepted formats:**
-
-```
-https://example.com/
-http://example.com
-```
-
----
-
-## ⚙️ Flags Guide
-
-
-### `--charset`
-
-Specifies the set of characters used for generating directory names.
-
-**supported characters (RFC 3986):**
-
-```
-a-z A-Z 0-9 - _ . ~ : / ? # [ ] @ ! $ & ' ( ) * + , ; =
-```
-
-* Duplicate characters are **automatically removed**.
-* If omitted, the default charset is: `"abc"`
-
-**Example:**
+### Start
 
 ```bash
---charset "abbcc1232"  → becomes "abc123"
+make start
+```
+
+### Clean
+
+```bash
+make clean
+```
+
+The compiled binary is generated at:
+
+```
+build/cravdata
+```
+
+You may also run it directly:
+
+```bash
+./build/cravdata
 ```
 
 ---
 
-### `--min`
+## 🔧 Scope
 
-Sets the **minimum length** of generated directory names.
-Default: `1`
+cravdata is designed for:
 
-### `--max`
+* Offline brute‑force research
+* Hash verification workflows
+* Controlled cryptographic experiments
+* Security lab environments
 
-Sets the **maximum length** of generated directory names.
-Default: `3`
-
-> The generator will start with the smallest combination (`min` length) and go up to the largest (`max` length).
-
----
-
-### `--timeout`
-
-Sets the timeout (in seconds) for each HTTP request.
-Default: `2`
+It is not intended for network‑bound directory enumeration anymore.
+The focus is now purely computational.
 
 ---
 
-### `--delay`
-
-Sets the delay (in milliseconds) between each HTTP request.  
-Default: `0`
+> This tool must only be used in authorized environments.
+> Unauthorized usage against third‑party systems is illegal.
 
 ---
