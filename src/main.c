@@ -1,6 +1,8 @@
-#include <stdio.h>
+// Project headers
+#include "cli/parser.h"
 
-int main(){
-    printf("hello world\n");
+int main(int argc, char *argv[]){
+    parse(argc, argv);
+    
     return 0;
 }
