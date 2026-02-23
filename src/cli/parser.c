@@ -1,10 +1,7 @@
-// Standard library includes
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
-#include <string.h>
-#include <stdbool.h>
-// Project headers
+
 #include "cli/parser.h"
 #include "settings/settings.h"
 
@@ -24,38 +21,31 @@ void parse(int argc, char *argv[]){
     while ((opt = getopt_long(argc, argv, "m:x:t:c:1vh", cli_options, NULL)) != -1) {
         switch (opt) {
             case 'm':
-                min = atoi(optarg);
-                printf("min: %d\n", min);
+                settings_set_min(atoi(optarg));
                 break;
 
             case 'x':
-                max = atoi(optarg);
-                printf("max: %d\n", max);
+                settings_set_max(atoi(optarg));
                 break;
 
             case 't':
-                threads = atoi(optarg);
-                printf("threads: %d\n", threads);
+                settings_set_threads(atoi(optarg));
                 break;
 
             case 'c':
-                charset = optarg;
-                printf("charset: %s\n", charset);
+                settings_set_charset(optarg);
                 break;
 
             case '1':
-                md5 = true;
-                printf("md5: %d\n", md5);
+                settings_set_md5(true);
                 break;
 
             case 'v':
-                verbose = true;
-                printf("verbose: %d\n", verbose);
+                settings_set_verbose(true);
                 break;
             
             case 'h':
-                help = true;
-                printf("help here\n");
+                settings_set_help(true);
                 return;
 
             default:
