@@ -1,0 +1,8 @@
+# build artifacts
+/build/
+
+# legacy experiments
+/.legacy_go/
+
+# object files
+*.o
