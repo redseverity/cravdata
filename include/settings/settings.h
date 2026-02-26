@@ -1,22 +1,30 @@
-#ifndef SETTINGS_SETTINGS_H
-#define SETTINGS_SETTINGS_H
+#ifndef CRAVDATA_SETTINGS_SETTINGS_H
+#define CRAVDATA_SETTINGS_SETTINGS_H
 
 #include <stdbool.h>
 
-int settings_get_min(void);
-int settings_get_max(void);
-int settings_get_threads(void);
-bool settings_get_md5(void);
-bool settings_get_verbose(void);
-bool settings_get_help(void);
-const char* settings_get_charset(void);
+// Struct that holds all configuration options
+typedef struct {
+    int min;
+    int max;
+    int threads;
+    bool md5;
+    bool verbose;
+    bool help;
+    char *charset;
+} settings_config_t;
 
-void settings_set_min(int min_value);
-void settings_set_max(int max_value);
-void settings_set_threads(int threads_value);
-void settings_set_md5(bool md5_flag);
-void settings_set_verbose(bool verbose_flag);
-void settings_set_help(bool help_flag);
-void settings_set_charset(const char *charset_value);
+// Global singleton for configuration
+extern settings_config_t settings;
+
+// Getters
+int settings_get_int(int *settings_field);       // Generic getter for integers
+bool settings_get_bool(bool *settings_field);    // Generic getter for booleans
+const char* settings_get_string(char **settings_field); // Getter for strings
+
+// Setters
+void settings_set_int(int *settings_field, int value);       // Generic setter for integers
+void settings_set_bool(bool *settings_field, bool value);    // Generic setter for booleans
+void settings_set_string(char **settings_field, const char *value); // Setter for strings (manages memory)
 
 #endif

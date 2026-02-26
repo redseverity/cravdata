@@ -1,40 +1,58 @@
 #include <string.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "settings/settings.h"
 
-int min = 1;
-int max = 3;
-int threads = 1;
-bool md5 = false;
-bool verbose = false;
-bool help = false;
-char *charset = NULL;
+// Global singleton for configuration
+settings_config_t settings = {
+    .min = 1,
+    .max = 3,
+    .threads = 1,
+    .md5 = false,
+    .verbose = false,
+    .help = false,
+    .charset = NULL
+};
 
-int settings_get_min(void)             { return min; }
-int settings_get_max(void)             { return max; }
-int settings_get_threads(void)         { return threads; }
-bool settings_get_md5(void)            { return md5; }
-bool settings_get_verbose(void)        { return verbose; }
-bool settings_get_help(void)           { return help; }
-const char* settings_get_charset(void) { return charset; } // const to prevent external modification
+// Generic getter for integers
+int settings_get_int(int *settings_field) {
+    return *settings_field;
+}
 
-void settings_set_min(int min_value)         { min = min_value; }
-void settings_set_max(int max_value)         { max = max_value; }
-void settings_set_threads(int threads_value) { threads = threads_value; }
-void settings_set_md5(bool md5_flag)         { md5 = md5_flag; }
-void settings_set_verbose(bool verbose_flag) { verbose = verbose_flag; }
-void settings_set_help(bool help_flag)       { help = help_flag; }
+// Generic getter for boolean flags
+bool settings_get_bool(bool *settings_field) {
+    return *settings_field;
+}
 
-void settings_set_charset(const char *charset_value) {
-    if (!charset_value) return;
+// Getter for strings
+const char* settings_get_string(char **settings_field) {
+    return *settings_field;
+}
 
-    char *tmp = malloc(strlen(charset_value) + 1);
-    if (!tmp) return;
+// Generic setter for integers
+void settings_set_int(int *settings_field, int value) {
+    *settings_field = value;
+}
+
+// Generic setter for boolean flags
+void settings_set_bool(bool *settings_field, bool value) {
+    *settings_field = value;
+}
+
+// Setter for strings (manages malloc/free)
+void settings_set_string(char **settings_field, const char *value) {
+    if (!value) return;
+
+    char *tmp = malloc(strlen(value) + 1);
+    if (!tmp) {
+        fprintf(stderr, "Memory allocation failed\n");
+        exit(EXIT_FAILURE);
+    }
     
-    strcpy(tmp, charset_value);
+    strcpy(tmp, value);
 
-    free(charset);
-    charset = tmp;
+    free(*settings_field);
+    *settings_field = tmp;
 }
