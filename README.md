@@ -2,8 +2,6 @@
 
 **cravdata** — CPU‑bound brute‑force & cryptographic analysis toolkit
 
-cravdata is currently being migrated from **Go to C**.
-
 The project is now focused on **CPU‑intensive brute‑force operations**, targeting:
 
 * Hash analysis and cracking
@@ -14,17 +12,6 @@ The project is now focused on **CPU‑intensive brute‑force operations**, targ
 Unlike traditional tools that rely purely on static wordlists, cravdata emphasizes **dynamic candidate generation** and deterministic keyspace traversal optimized for CPU performance.
 
 Built for authorized pentests, CTFs, and security labs — modular, efficient, and designed for responsible use.
-
----
-
-## ⚠️ Project Status
-
-This project is under active migration to C.
-
-* The previous Go implementation is being deprecated.
-* The architecture is being redesigned for CPU‑bound workloads.
-* Performance, memory control, and modular parsing are current priorities.
-* CLI structure may evolve during refactoring.
 
 ---
 
