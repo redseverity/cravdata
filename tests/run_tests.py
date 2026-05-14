@@ -1,4 +1,6 @@
 from os import system
+import sys
+sys.dont_write_bytecode = True
 
 from suite import args
 from utils.ansi import BOLD, RESET, BLUE
