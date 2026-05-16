@@ -27,4 +27,7 @@ void settings_set_int(int *settings_field, int value);       // Generic setter f
 void settings_set_bool(bool *settings_field, bool value);    // Generic setter for booleans
 void settings_set_string(char **settings_field, const char *value); // Setter for strings (manages memory)
 
+// Print
+void settings_print(void);
+
 #endif

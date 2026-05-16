@@ -13,8 +13,10 @@ settings_config_t settings = {
     .md5 = false,
     .verbose = false,
     .help = false,
-    .charset = NULL
+    .charset = "abc123"
 };
+
+// Getters -------------------
 
 // Generic getter for integers
 int settings_get_int(int *settings_field) {
@@ -30,6 +32,8 @@ bool settings_get_bool(bool *settings_field) {
 const char* settings_get_string(char **settings_field) {
     return *settings_field;
 }
+
+// Setters -------------------
 
 // Generic setter for integers
 void settings_set_int(int *settings_field, int value) {
@@ -55,4 +59,57 @@ void settings_set_string(char **settings_field, const char *value) {
 
     free(*settings_field);
     *settings_field = tmp;
+}
+
+// Print Settings
+void settings_print(void) {
+    typedef enum {
+        T_INT,
+        T_BOOL,
+        T_STRING,
+    } Type;
+
+    typedef struct
+    {
+        const char *key;
+        void *value;
+        Type type;
+    } ConfigEntry;
+
+    ConfigEntry arrayy[] = {
+        {"min", &settings.min, T_INT},
+        {"max", &settings.max, T_INT},
+        {"threads", &settings.threads, T_INT},
+        {"charset", &settings.charset, T_STRING},
+        {"md5", &settings.md5, T_BOOL},
+        {"verbose", &settings.verbose, T_BOOL},
+        {"help", &settings.help, T_BOOL}
+    };
+
+    printf("\n••• CURRENT SETTINGS •••\n");
+
+    for (size_t i = 0; i < (sizeof(arrayy) / sizeof(arrayy[0])); i++) {
+        switch (arrayy[i].type) {
+            case T_INT:
+                printf("[✓] %-8s : %i\n", arrayy[i].key, *(int*)arrayy[i].value);
+                break;
+
+            case T_BOOL:
+                if (*(bool*)arrayy[i].value == true) {
+                    printf("[✓] %-8s : true\n", arrayy[i].key);
+                }
+                break;
+
+            case T_STRING: {
+                char *str_val = *(char**)arrayy[i].value;
+                printf("[✓] %-8s : %s\n", arrayy[i].key, str_val);
+                break;
+            }
+            
+            default:
+                break;
+        }
+    }
+
+    printf("••••••••••••••••••••••••\n\n");
 }

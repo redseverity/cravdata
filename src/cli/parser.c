@@ -17,21 +17,26 @@ static struct option cli_options[] = {
     {0, 0, 0, 0} // terminator
 };
 
+// sets the flags within the settings structure.
 void parse(int argc, char *argv[]){
+
+    if (argc == 1){
+        printf("show help 1");
+        exit(EXIT_SUCCESS);
+    }
+
     int opt;
     while ((opt = getopt_long(argc, argv, "m:x:t:c:1vh", cli_options, NULL)) != -1) {
         switch (opt) {
             case 'm': {
                 int value = validate_int(optarg, 1, 1000, "min");
                 settings_set_int(&settings.min, value);
-                printf("min: %d\n", settings_get_int(&settings.min));
                 break;
             }
 
             case 'x': {
                 int value = validate_int(optarg, 1, 1000, "max");
                 settings_set_int(&settings.max, value);
-                printf("max: %d\n", settings_get_int(&settings.max));
                 break;
             }
 
@@ -39,39 +44,46 @@ void parse(int argc, char *argv[]){
                 // TODO: Implement dynamic upper bound for threads based on system capabilities.
                 int value = validate_int(optarg, 1, 256, "threads");
                 settings_set_int(&settings.threads, value);
-                printf("threads: %d\n", settings_get_int(&settings.threads));
                 break;
             }
 
             case 'c': {
                 const char *value = validate_string(optarg);
                 settings_set_string(&settings.charset, value);
-                printf("charset: %s\n", settings_get_string(&settings.charset));
                 break;
             }
 
             case '1': {
                 settings_set_bool(&settings.md5, true);
-                printf("md5: %d\n", settings_get_bool(&settings.md5));
                 break;
             }
 
             case 'v': {
                 settings_set_bool(&settings.verbose, true);
-                printf("verbose: %d\n", settings_get_bool(&settings.verbose));
                 break;
             }
             
             case 'h': {
                 settings_set_bool(&settings.help, true);
-                printf("help: %d\n", settings_get_bool(&settings.help));
-                return;
+                exit(EXIT_SUCCESS);
+            }
+
+            case '?': {
+                fprintf(stderr, "Unexpected argument: %s\n", argv[optind]);
+                printf("show help 2");
+                exit(EXIT_FAILURE);
             }
 
             default:
-                fprintf(stderr, "Invalid argument\n");
+                fprintf(stderr, "Unexpected argument: %s\n", argv[optind]);
+                printf("show help 3");
                 exit(EXIT_FAILURE);
         }
     }
-                
+
+    if (optind < argc) {
+        fprintf(stderr, "Unexpected argument: %s\n", argv[optind]);
+        printf("show help 4");
+        exit(EXIT_FAILURE);
+    }
 }
