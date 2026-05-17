@@ -62,7 +62,7 @@ void settings_set_string(char **settings_field, const char *value) {
 }
 
 // Print Settings
-void settings_print(void) {
+void settings_print(bool verbose) {
     typedef enum {
         T_INT,
         T_BOOL,
@@ -85,6 +85,8 @@ void settings_print(void) {
         {"verbose", &settings.verbose, T_BOOL},
         {"help", &settings.help, T_BOOL}
     };
+
+    if (verbose == false) return;
 
     printf("\n••• CURRENT SETTINGS •••\n");
 
@@ -111,5 +113,5 @@ void settings_print(void) {
         }
     }
 
-    printf("••••••••••••••••••••••••\n\n");
+    printf("••••••••••••••••••••••••\n");
 }

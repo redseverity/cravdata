@@ -4,6 +4,7 @@
 
 #include "cli/parser.h"
 #include "cli/validate.h"
+#include "cli/help.h"
 #include "settings/settings.h"
 
 static struct option cli_options[] = {
@@ -18,7 +19,7 @@ static struct option cli_options[] = {
 };
 
 // sets the flags within the settings structure.
-void parse(int argc, char *argv[]){
+void cli_parse(int argc, char *argv[]){
 
     if (argc == 1){
         printf("show help 1");
@@ -29,26 +30,26 @@ void parse(int argc, char *argv[]){
     while ((opt = getopt_long(argc, argv, "m:x:t:c:1vh", cli_options, NULL)) != -1) {
         switch (opt) {
             case 'm': {
-                int value = validate_int(optarg, 1, 1000, "min");
+                int value = cli_validate_int(optarg, 1, 1000, "min");
                 settings_set_int(&settings.min, value);
                 break;
             }
 
             case 'x': {
-                int value = validate_int(optarg, 1, 1000, "max");
+                int value = cli_validate_int(optarg, 1, 1000, "max");
                 settings_set_int(&settings.max, value);
                 break;
             }
 
             case 't': {
                 // TODO: Implement dynamic upper bound for threads based on system capabilities.
-                int value = validate_int(optarg, 1, 256, "threads");
+                int value = cli_validate_int(optarg, 1, 256, "threads");
                 settings_set_int(&settings.threads, value);
                 break;
             }
 
             case 'c': {
-                const char *value = validate_string(optarg);
+                const char *value = cli_validate_string(optarg);
                 settings_set_string(&settings.charset, value);
                 break;
             }
@@ -65,25 +66,26 @@ void parse(int argc, char *argv[]){
             
             case 'h': {
                 settings_set_bool(&settings.help, true);
+                cli_help();
                 exit(EXIT_SUCCESS);
             }
 
             case '?': {
-                fprintf(stderr, "Unexpected argument: %s\n", argv[optind]);
-                printf("show help 2");
+                fprintf(stderr, "Unexpected argument: %s\n\n", argv[optind]);
+                cli_help();
                 exit(EXIT_FAILURE);
             }
 
             default:
-                fprintf(stderr, "Unexpected argument: %s\n", argv[optind]);
-                printf("show help 3");
+                fprintf(stderr, "Unexpected argument: %s\n\n", argv[optind]);
+                cli_help();
                 exit(EXIT_FAILURE);
         }
     }
 
     if (optind < argc) {
-        fprintf(stderr, "Unexpected argument: %s\n", argv[optind]);
-        printf("show help 4");
+        fprintf(stderr, "Unexpected argument: %s\n\n", argv[optind]);
+        cli_help();
         exit(EXIT_FAILURE);
     }
 }
