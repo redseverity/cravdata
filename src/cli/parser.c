@@ -30,26 +30,26 @@ void cli_parse(int argc, char *argv[]){
     while ((opt = getopt_long(argc, argv, "m:x:t:c:1vh", cli_options, NULL)) != -1) {
         switch (opt) {
             case 'm': {
-                int value = cli_validate_int(optarg, 1, 1000, "min");
+                int value = cli_validate_arg_int(optarg, 1, 1000, "min");
                 settings_set_int(&settings.min, value);
                 break;
             }
 
             case 'x': {
-                int value = cli_validate_int(optarg, 1, 1000, "max");
+                int value = cli_validate_arg_int(optarg, 1, 1000, "max");
                 settings_set_int(&settings.max, value);
                 break;
             }
 
             case 't': {
                 // TODO: Implement dynamic upper bound for threads based on system capabilities.
-                int value = cli_validate_int(optarg, 1, 256, "threads");
+                int value = cli_validate_arg_int(optarg, 1, 256, "threads");
                 settings_set_int(&settings.threads, value);
                 break;
             }
 
             case 'c': {
-                const char *value = cli_validate_string(optarg);
+                const char *value = cli_validate_arg_str(optarg);
                 settings_set_string(&settings.charset, value);
                 break;
             }
@@ -71,20 +71,20 @@ void cli_parse(int argc, char *argv[]){
             }
 
             case '?': {
-                fprintf(stderr, "Unexpected argument: %s\n\n", argv[optind]);
+                fprintf(stderr, "[!] Unexpected argument: %s\n\n", argv[optind]);
                 cli_help();
                 exit(EXIT_FAILURE);
             }
 
             default:
-                fprintf(stderr, "Unexpected argument: %s\n\n", argv[optind]);
+                fprintf(stderr, "[!] Unexpected argument: %s\n\n", argv[optind]);
                 cli_help();
                 exit(EXIT_FAILURE);
         }
     }
 
     if (optind < argc) {
-        fprintf(stderr, "Unexpected argument: %s\n\n", argv[optind]);
+        fprintf(stderr, "[!] Unexpected argument: %s\n\n", argv[optind]);
         cli_help();
         exit(EXIT_FAILURE);
     }

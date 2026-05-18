@@ -12,10 +12,10 @@ typedef struct {
     bool verbose;
     bool help;
     char *charset;
-} settings_config_t;
+} Settings;
 
 // Global singleton for configuration
-extern settings_config_t settings;
+extern Settings settings;
 
 // Getters
 int settings_get_int(int *settings_field);       // Generic getter for integers

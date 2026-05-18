@@ -6,7 +6,7 @@
 #include "settings/settings.h"
 
 // Global singleton for configuration
-settings_config_t settings = {
+Settings settings = {
     .min = 1,
     .max = 3,
     .threads = 1,
@@ -51,7 +51,7 @@ void settings_set_string(char **settings_field, const char *value) {
 
     char *tmp = malloc(strlen(value) + 1);
     if (!tmp) {
-        fprintf(stderr, "Memory allocation failed\n");
+        fprintf(stderr, "[!] Memory allocation failed\n");
         exit(EXIT_FAILURE);
     }
     

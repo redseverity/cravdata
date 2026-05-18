@@ -2,10 +2,6 @@
 #include <stdlib.h>
 #include <getopt.h>
 
-#include <stdio.h>
-#include "cli/help.h"
-
-#include <stdio.h>
 #include "cli/help.h"
 
 void cli_help(void) {
