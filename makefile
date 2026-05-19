@@ -4,10 +4,10 @@ OUT = $(BUILD_DIR)/$(NAME)
 
 SRC = \
 src/main.c \
-src/cli/help.c \
 src/cli/parser.c \
 src/cli/validate.c \
-src/settings/settings.c
+src/settings/settings.c \
+src/ui/display.c \
 
 CC = gcc
 CFLAGS = -Wall -Wextra -Iinclude -std=c99
@@ -16,9 +16,6 @@ CFLAGS = -Wall -Wextra -Iinclude -std=c99
 
 clean:
 	rm -rf $(BUILD_DIR)
-
-start:
-	./$(OUT)
 
 build: $(OUT)
 
