@@ -6,11 +6,12 @@ SRC = \
 src/main.c \
 src/cli/parser.c \
 src/cli/validate.c \
+src/utils/utils.c \
 src/settings/settings.c \
-src/ui/display.c \
+src/ui/display.c
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Iinclude -std=c99
+CFLAGS = -Wall -Wextra -Iinclude -std=c99 -O3 -march=native
 
 .PHONY: build start clean
 

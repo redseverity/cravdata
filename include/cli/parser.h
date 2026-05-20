@@ -3,6 +3,6 @@
 
 #include "settings/settings.h"
 
-void cli_parse(int argc, char *argv[]);
+void cli_parse(int argc, char *argv[], Settings *s);
 
 #endif

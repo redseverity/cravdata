@@ -15,8 +15,8 @@ Settings settings = {
     .charset = NULL
 };
 
-// --- GETTERS ---
 
+// --- GETTERS ---
 int settings_get_min(void) { return settings.min; }
 int settings_get_max(void) { return settings.max; }
 int settings_get_threads(void) { return settings.threads; }
@@ -24,24 +24,27 @@ bool settings_get_md5(void) { return settings.md5; }
 bool settings_get_verbose(void) { return settings.verbose; }
 const char* settings_get_charset(void) { return settings.charset; }
 
+
 // --- SETTERS ---
+void settings_set_int(int *settings_field, int value) {
+    *settings_field = value;
+}
 
-void settings_set_min(int value) { settings.min = value; }
-void settings_set_max(int value) { settings.max = value; }
-void settings_set_threads(int value) { settings.threads = value; }
-void settings_set_md5(bool value) { settings.md5 = value; }
-void settings_set_verbose(bool value) { settings.verbose = value; }
+void settings_set_bool(bool *settings_field) {
+    *settings_field = true;
+}
 
-void settings_set_charset(const char *value) {
-    if (!value) return;
+bool settings_set_string(char **settings_field, const char *value) {
+    if (!value) return false;
 
     char *tmp = malloc(strlen(value) + 1);
     if (!tmp) {
-        fprintf(stderr, "[!] Error: Memory allocation failed for charset.\n\n");
-        exit(EXIT_FAILURE);
+        return false;
     }
 
     strcpy(tmp, value);
-    free(settings.charset);
-    settings.charset = tmp;
+    free(*settings_field); 
+    *settings_field = tmp; 
+    
+    return true;
 }
