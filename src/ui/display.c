@@ -23,7 +23,7 @@ void ui_display_help(void) {
 }
 
 void ui_display_help_usage(void) {
-    fprintf(stdout, "Try 'cravdata --help' for more information.\n\n");
+    fprintf(stderr, "Try 'cravdata --help' for more information.\n\n");
 }
 
 void ui_display_setting(const Settings *s) {

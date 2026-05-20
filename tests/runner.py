@@ -2,7 +2,7 @@ from os import system
 import sys
 sys.dont_write_bytecode = True
 
-from suite import args
+import suite
 from utils.ansi import BOLD, RESET, BLUE
 from utils.timer import Timer
 
@@ -12,7 +12,7 @@ def main():
 
     time = Timer()
     time.start()
-    args.test()
+    suite.run()
     time.stop()
     time.show()
 

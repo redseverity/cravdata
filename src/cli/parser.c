@@ -25,7 +25,7 @@ void cli_parse(int argc, char *argv[], Settings *s){
 
     if (argc == 1){
         ui_display_help_usage();
-        exit(EXIT_SUCCESS);
+        exit(EXIT_FAILURE);
     }
 
     opterr = 0;
