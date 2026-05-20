@@ -48,7 +48,7 @@ void cli_parse(int argc, char *argv[], Settings *s){
                 const char *input_name = raw_arg + 2;
 
                 if (strcmp(input_name, cli_options[longindex].name) != 0) {
-                    fprintf(stderr, "[!] Error: Argument '%s' is unexpected (abbreviations are disabled).\n\n", raw_arg);
+                    fprintf(stderr, "[!] Unrecognized option '%s' (abbreviations are disabled).\n\n", raw_arg);
                     ui_display_help_usage();
                     exit(EXIT_FAILURE);
                 }
@@ -80,7 +80,7 @@ void cli_parse(int argc, char *argv[], Settings *s){
                 
                 if (!settings_set_string(&s->charset, value)) {
                     flag_name = utils_resolve_flag_name(optopt, optind, argv, flag_buf, sizeof(flag_buf));
-                    fprintf(stderr, "[!] Critical Error: Memory allocation failed while parsing '%s'.\n\n", flag_name);
+                    fprintf(stderr, "[!] Critical Memory allocation failed while parsing '%s'.\n\n", flag_name);
                     ui_display_help_usage();
                     exit(EXIT_FAILURE);
                 }
@@ -105,14 +105,14 @@ void cli_parse(int argc, char *argv[], Settings *s){
 
             case ':':
                 flag_name = utils_resolve_flag_name(optopt, optind, argv, flag_buf, sizeof(flag_buf));
-                fprintf(stderr, "[!] Error: Argument '%s' requires a value.\n\n", flag_name);
+                fprintf(stderr, "[!] Option '%s' requires an argument.\n\n", flag_name);
                 ui_display_help_usage();
                 exit(EXIT_FAILURE);
 
             case '?':
             default:
                 flag_name = utils_resolve_flag_name(optopt, optind, argv, flag_buf, sizeof(flag_buf));
-                fprintf(stderr, "[!] Error: Argument '%s' is unexpected.\n\n", flag_name);
+                fprintf(stderr, "[!] Unrecognized option '%s'.\n\n", flag_name);
                 ui_display_help_usage();
                 exit(EXIT_FAILURE);
         }
@@ -122,7 +122,7 @@ void cli_parse(int argc, char *argv[], Settings *s){
 
     // Check for unexpected positional arguments after processing options
     if (optind < argc) {
-        fprintf(stderr, "[!] Error: Argument '%s' is unexpected.\n\n", argv[optind]);
+        fprintf(stderr, "[!] Unexpected extra argument '%s'.\n\n", argv[optind]);
         ui_display_help_usage();
         exit(EXIT_FAILURE);
     }

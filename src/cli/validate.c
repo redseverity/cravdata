@@ -17,30 +17,21 @@ static int parse_int(const char *str, int optopt_val, int optind_val, char *cons
 
     long value = strtol(str, &end, 10);
     
-    // Resolve flag name dynamically
     char buf[32];
     const char *flag_name = utils_resolve_flag_name(optopt_val, optind_val, argv, buf, sizeof(buf));
 
-    // No digits found (e.g., --threads "abc")
-    if (end == str) {
-        fprintf(stderr, "[!] Error: Argument '%s' must be a valid number (no digits found in '%s').\n\n", 
-                flag_name, str);
-        ui_display_help_usage();
-        exit(EXIT_FAILURE);
-    }
-
-    // Extra characters after number (e.g., --threads "4ade")
-    if (*end != '\0') {
-        fprintf(stderr, "[!] Error: Argument '%s' contains invalid characters in '%s'.\n\n", 
-                flag_name, str);
+    // Invalid numeric argument (no digits found or extra characters)
+    if (end == str || *end != '\0') {
+        fprintf(stderr, "[!] Invalid numeric argument '%s' for option '%s'.\n\n", 
+            str, flag_name);
         ui_display_help_usage();
         exit(EXIT_FAILURE);
     }
 
     // Overflow or underflow (e.g., --threads "99999999999999")
     if (errno == ERANGE || value < INT_MIN || value > INT_MAX) {
-        fprintf(stderr, "[!] Error: Argument '%s' value '%s' exceeds integer limits.\n\n", 
-                flag_name, str);
+        fprintf(stderr, "[!] Option '%s' argument '%s' exceeds integer limits.\n\n", 
+            flag_name, str);
         ui_display_help_usage();
         exit(EXIT_FAILURE);
     }
@@ -68,7 +59,7 @@ int cli_validate_arg_int(const char *arg_val, int optopt_val, int optind_val, ch
             true_flag = utils_resolve_flag_name(optopt_val, optind_val, argv, buf, sizeof(buf));
         }
         
-        fprintf(stderr, "[!] Error: Option '%s' requires a numeric argument, but received '%s' (looks like another option).\n\n",
+        fprintf(stderr, "[!] Option '%s' requires a numeric argument (received '%s').\n\n",
                 true_flag, arg_val);
         ui_display_help_usage();
         exit(EXIT_FAILURE);
@@ -79,7 +70,7 @@ int cli_validate_arg_int(const char *arg_val, int optopt_val, int optind_val, ch
     if (value < min_allowed || value > max_allowed) {
         const char *flag_name = utils_resolve_flag_name(optopt_val, optind_val, argv, buf, sizeof(buf));
         
-        fprintf(stderr, "[!] Error: Argument '%s' value (%d) is out of bounds (allowed range: %d-%d).\n\n",
+        fprintf(stderr, "[!] Option '%s' argument (%d) is out of range (%d-%d).\n\n",
                 flag_name, value, min_allowed, max_allowed);
         ui_display_help_usage();
         exit(EXIT_FAILURE);
@@ -94,7 +85,7 @@ const char* cli_validate_arg_str(const char *optarg, int optopt_val, int optind_
         char buf[32];
         const char *flag_name = utils_resolve_flag_name(optopt_val, optind_val, argv, buf, sizeof(buf));
         
-        fprintf(stderr, "[!] Error: Argument '%s' cannot be empty.\n\n", flag_name);
+        fprintf(stderr, "[!] Option '%s' argument cannot be empty.\n\n", flag_name);
         ui_display_help_usage();
         exit(EXIT_FAILURE);
     }
@@ -104,13 +95,13 @@ const char* cli_validate_arg_str(const char *optarg, int optopt_val, int optind_
 // Validates logical conflicts and mandatory parameters
 void cli_validate_settings(const Settings *s) {
     if (s->min > s->max) {
-        fprintf(stderr, "[!] Error: --min (%d) cannot be greater than --max (%d).\n\n", s->min, s->max);
+        fprintf(stderr, "[!] --min (%d) cannot be greater than --max (%d).\n\n", s->min, s->max);
         ui_display_help_usage();
         exit(EXIT_FAILURE);
     }
 
     if (s->charset == NULL) {
-        fprintf(stderr, "[!] Error: Missing required argument '--charset'.\n\n");
+        fprintf(stderr, "[!] Missing required option '--charset'.\n\n");
         ui_display_help_usage();
         exit(EXIT_FAILURE);
     }
