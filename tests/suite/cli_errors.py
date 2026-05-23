@@ -8,32 +8,32 @@ CLI_ERRORS_TESTS = [
     # PARSER.C ERRORS
     # =========================================================================
     (
-        "Parser: Usage info when no arguments are passed",
+        "Usage info when no arguments are passed",
         [],
         1
     ),
     (
-        "Parser: Disabled abbreviation detection for long flags",
+        "Disabled abbreviation detection for long flags",
         ["--h"],
         1
     ),
     (
-        "Parser: Flag requiring an argument passed with nothing",
+        "Flag requiring an argument passed with nothing",
         ["-c"],
         1
     ),
     (
-        "Parser: Unrecognized short option format",
+        "Unrecognized short option format",
         ["-wrongflag"],
         1
     ),
     (
-        "Parser: Unrecognized long option format",
+        "Unrecognized long option format",
         ["--wrongflag"],
         1
     ),
     (
-        "Parser: Positional/extra argument unexpected",
+        "Positional/extra argument unexpected",
         ["wrongflag"],
         1
     ),
@@ -42,37 +42,37 @@ CLI_ERRORS_TESTS = [
     # VALIDATE.C ERRORS
     # =========================================================================
     (
-        "Validate: Invalid mixed alphanumeric integer argument",
+        "Invalid mixed alphanumeric integer argument",
         ["-t", "123abc"],
         1
     ),
     (
-        "Validate: Numeric argument exceeding INT limits (overflow)",
+        "Numeric argument exceeding INT limits (overflow)",
         ["-t", "9999999999"],
         1
     ),
     (
-        "Validate: Option collision (missing numeric argument, got next flag)",
+        "Option collision (missing numeric argument, got next flag)",
         ["-t", "-v"],
         1
     ),
     (
-        "Validate: Value out of allowed range (1-256)",
+        "Value out of allowed range (1-256)",
         ["-t", "-9"],
         1
     ),
     (
-        "Validate: Prevent empty string as argument",
+        "Prevent empty string as argument",
         ["-c", ""],
         1
     ),
     (
-        "Validate: Business logic rule (--min greater than --max)",
+        "Business logic rule (--min greater than --max)",
         ["--min", "20", "--max", "10"],
         1
     ),
     (
-        "Validate: Missing required option dependency (--charset)",
+        "Missing required option dependency (--charset)",
         ["-v"],
         1
     ),

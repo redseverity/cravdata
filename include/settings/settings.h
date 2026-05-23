@@ -3,6 +3,8 @@
 
 #include <stdbool.h>
 
+#include "cli/args.h"
+
 // Struct that holds all configuration options
 typedef struct {
     int min;
@@ -26,8 +28,6 @@ bool settings_get_verbose(void);
 const char* settings_get_charset(void);
 
 // --- SETTERS ---
-void settings_set_int(int *settings_field, int value);
-void settings_set_bool(bool *settings_field);
-bool settings_set_string(char **settings_field, const char *value);
+bool settings_load_from_raw(const RawArgList *list);
 
 #endif

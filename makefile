@@ -4,7 +4,8 @@ OUT = $(BUILD_DIR)/$(NAME)
 
 SRC = \
 src/main.c \
-src/cli/parser.c \
+src/cli/args.c \
+src/cli/fetch_args.c \
 src/cli/validate.c \
 src/utils/utils.c \
 src/settings/settings.c \

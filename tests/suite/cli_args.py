@@ -20,26 +20,20 @@ def return_status(description: str, actual_code: int, expected_code: int):
 
 # Successful execution baselines (Requires mandatory -c/--charset)
 ARG_TESTS = [
-    # Minimum required argument to execute successfully
     ("Short flag -c (Required)", ["-c", "abcdef"], 0),
-    ("Long flag --charset (Required)", ["--charset", "abcdef"], 0),
-
-    # Short options combined with mandatory charset
     ("Short flag -m with charset", ["-m", "1", "-c", "abc"], 0),
     ("Short flag -x with charset", ["-x", "5", "-c", "abc"], 0),
     ("Short flag -t with charset", ["-t", "4", "-c", "abc"], 0),
     ("Short flag -1 with charset", ["-1", "-c", "abc"], 0),
     ("Short flag -v with charset", ["-v", "-c", "abc"], 0),
+    ("Short flag -h (Help menu)", ["-h"], 0),
 
-    # Long options combined with mandatory charset
+    ("Long flag --charset (Required)", ["--charset", "abcdef"], 0),
     ("Long flag --min with charset", ["--min", "1", "-c", "abc"], 0),
     ("Long flag --max with charset", ["--max", "5", "-c", "abc"], 0),
     ("Long flag --threads with charset", ["--threads", "4", "-c", "abc"], 0),
     ("Long flag --md5 with charset", ["--md5", "-c", "abc"], 0),
     ("Long flag --verbose with charset", ["--verbose", "-c", "abc"], 0),
-
-    # Global options that bypass standard input validation
-    ("Short flag -h (Help menu)", ["-h"], 0),
     ("Long flag --help (Help menu)", ["--help"], 0),
 ]
 

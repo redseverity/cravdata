@@ -6,103 +6,130 @@
 #include <limits.h>
 #include <errno.h>
 
-#include "ui/display.h"
+#include "cli/args.h"
 #include "cli/validate.h"
+#include "ui/display.h"
 #include "utils/utils.h"
 
-// Parses string to integer with strict error handling and flag collision checks
-static int parse_int(const char *str, int optopt_val, int optind_val, char *const argv[]) {
-    char *end;
-    errno = 0;
-
-    long value = strtol(str, &end, 10);
-    
-    char buf[32];
-    const char *flag_name = utils_resolve_flag_name(optopt_val, optind_val, argv, buf, sizeof(buf));
-
-    // Invalid numeric argument (no digits found or extra characters)
-    if (end == str || *end != '\0') {
-        fprintf(stderr, "[!] Invalid numeric argument '%s' for option '%s'.\n\n", 
-            str, flag_name);
-        ui_display_help_usage();
-        exit(EXIT_FAILURE);
-    }
-
-    // Overflow or underflow (e.g., --threads "99999999999999")
-    if (errno == ERANGE || value < INT_MIN || value > INT_MAX) {
-        fprintf(stderr, "[!] Option '%s' argument '%s' exceeds integer limits.\n\n", 
-            flag_name, str);
-        ui_display_help_usage();
-        exit(EXIT_FAILURE);
-    }
-
-    return (int)value;
-}
-
-// Validates integer value against allowed limits with flag collision checks
-int cli_validate_arg_int(const char *arg_val, int optopt_val, int optind_val, char *const argv[], int min_allowed, int max_allowed) {
+static bool validate_int(const char *arg, int optopt, int optind, char *const argv[], int min_allowed, int max_allowed) {
     char buf[32];
     
-    if (arg_val != NULL && arg_val[0] == '-' && arg_val[1] != '\0' && !isdigit((unsigned char)arg_val[1])) {
-        
+    if (arg != NULL && arg[0] == '-' && arg[1] != '\0' && !isdigit((unsigned char)arg[1])) {
         const char *true_flag = NULL;
-        for (int i = optind_val; i >= 0; i--) {
-            if (argv[i] != NULL && argv[i] == arg_val) {
+
+        for (int i = optind; i >= 0; i--) {
+            if (argv[i] != NULL && argv[i] == arg) {
                 if (i > 0 && argv[i - 1] != NULL && argv[i - 1][0] == '-') {
                     true_flag = argv[i - 1];
                     break;
                 }
             }
         }
-        
+
         if (true_flag == NULL) {
-            true_flag = utils_resolve_flag_name(optopt_val, optind_val, argv, buf, sizeof(buf));
+            true_flag = utils_resolve_flag_name(optopt, optind, argv, buf, sizeof(buf));
         }
         
-        fprintf(stderr, "[!] Option '%s' requires a numeric argument (received '%s').\n\n",
-                true_flag, arg_val);
+        fprintf(stderr, "[!] Option '%s' requires a numeric argument (received '%s').\n\n", true_flag, arg);
         ui_display_help_usage();
-        exit(EXIT_FAILURE);
+        return false;
     }
 
-    int value = parse_int(arg_val, optopt_val, optind_val, argv);
-    
-    if (value < min_allowed || value > max_allowed) {
-        const char *flag_name = utils_resolve_flag_name(optopt_val, optind_val, argv, buf, sizeof(buf));
-        
-        fprintf(stderr, "[!] Option '%s' argument (%d) is out of range (%d-%d).\n\n",
-                flag_name, value, min_allowed, max_allowed);
+    char *end;
+    errno = 0;
+    long value_long = strtol(arg, &end, 10);
+    const char *flag_name = utils_resolve_flag_name(optopt, optind, argv, buf, sizeof(buf));
+
+    if (end == arg || *end != '\0') {
+        fprintf(stderr, "[!] Invalid numeric argument '%s' for option '%s'.\n\n", arg, flag_name);
         ui_display_help_usage();
-        exit(EXIT_FAILURE);
+        return false;
+    }
+
+    if (errno == ERANGE || value_long < INT_MIN || value_long > INT_MAX) {
+        fprintf(stderr, "[!] Option '%s' argument '%s' exceeds integer limits.\n\n", flag_name, arg);
+        ui_display_help_usage();
+        return false;
+    }
+
+    int value = (int)value_long;
+    if (value < min_allowed || value > max_allowed) {
+        const char *flag_name_range = utils_resolve_flag_name(optopt, optind, argv, buf, sizeof(buf));
+        fprintf(stderr, "[!] Option '%s' argument (%d) is out of range (%d-%d).\n\n", flag_name_range, value, min_allowed, max_allowed);
+        ui_display_help_usage();
+        return false;
     }
     
-    return value;
+    return true;
 }
 
-// Validates non-empty string
-const char* cli_validate_arg_str(const char *optarg, int optopt_val, int optind_val, char *const argv[]) {
+static bool validate_str(const char *optarg, int optopt, int optind, char *const argv[]) {
     if (!optarg || optarg[0] == '\0') {
         char buf[32];
-        const char *flag_name = utils_resolve_flag_name(optopt_val, optind_val, argv, buf, sizeof(buf));
-        
+        const char *flag_name = utils_resolve_flag_name(optopt, optind, argv, buf, sizeof(buf));
         fprintf(stderr, "[!] Option '%s' argument cannot be empty.\n\n", flag_name);
         ui_display_help_usage();
-        exit(EXIT_FAILURE);
+        return false;
     }
-    return optarg;
+    return true;
 }
 
-// Validates logical conflicts and mandatory parameters
-void cli_validate_settings(const Settings *s) {
+bool validate_raw_list(const RawArgList *list, int argc, int optind, char *const argv[]) {
+
+    if (optind < argc) {
+        fprintf(stderr, "[!] Unexpected extra argument '%s'.\n\n", argv[optind]);
+        ui_display_help_usage();
+        return false;
+    }
+
+    for (int i = 0; i < list->count; i++) {
+        char flag = list->args[i].flag;
+        const char *val = list->args[i].raw_value;
+        int optopt = (int)flag;
+
+        switch (flag) {
+            case 'm':
+                if (!validate_int(val, optopt, optind, argv, 1, 1000)) {
+                    return false;
+                }
+                break;
+
+            case 'x':
+                if (!validate_int(val, optopt, optind, argv, 1, 1000)) {
+                    return false;
+                }
+                break;
+
+            case 't':
+                if (!validate_int(val, optopt, optind, argv, 1, 256)) {
+                    return false;
+                }
+                break;
+
+            case 'c':
+                if (!validate_str(val, optopt, optind, argv)) {
+                    return false;
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    return true;
+}
+
+bool validate_logic(const Settings *s) {
     if (s->min > s->max) {
         fprintf(stderr, "[!] --min (%d) cannot be greater than --max (%d).\n\n", s->min, s->max);
         ui_display_help_usage();
-        exit(EXIT_FAILURE);
+        return false;
     }
-
     if (s->charset == NULL) {
         fprintf(stderr, "[!] Missing required option '--charset'.\n\n");
         ui_display_help_usage();
-        exit(EXIT_FAILURE);
+        return false;
     }
+    return true;
 }
