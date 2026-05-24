@@ -12,8 +12,8 @@ typedef struct args {
     RawArg *args;
 } RawArgList;
 
-void list_args_init(RawArgList *list);
-void list_args_add(RawArgList *list, char flag, const char *value);
-void list_args_free(RawArgList *list);
+void args_list_init(RawArgList *list);
+void args_list_add(RawArgList *list, char flag, const char *value);
+void args_list_free(RawArgList *list);
 
 #endif

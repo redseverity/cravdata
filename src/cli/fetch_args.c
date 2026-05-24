@@ -37,12 +37,12 @@ void fetch_args(int argc, char *argv[], RawArgList *list){
             case 'x':
             case 't':
             case 'c':
-                list_args_add(list, opt, optarg);
+                args_list_add(list, opt, optarg);
                 break;
 
             case '1':
             case 'v':
-                list_args_add(list, opt, NULL);
+                args_list_add(list, opt, NULL);
                 break;
             
             case 'h':

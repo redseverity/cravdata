@@ -12,26 +12,26 @@
 int main(int argc, char *argv[]){
     RawArgList args;
 
-    list_args_init(&args);
+    args_list_init(&args);
 
     if (argc == 1){
-        list_args_free(&args);
+        args_list_free(&args);
         exit(EXIT_FAILURE);
     }
 
     fetch_args(argc, argv, &args);
 
     if (!validate_raw_list(&args, argc, optind, argv)) {
-        list_args_free(&args);
+        args_list_free(&args);
         exit(EXIT_FAILURE);
     }
 
     if (!settings_load_from_raw(&args)) {
-        list_args_free(&args);
+        args_list_free(&args);
         exit(EXIT_FAILURE);
     }
 
-    list_args_free(&args);
+    args_list_free(&args);
 
     if (!validate_logic(&settings)) exit(EXIT_FAILURE);
     
