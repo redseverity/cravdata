@@ -5,8 +5,9 @@
 
 #include "settings/settings.h"
 #include "cli/args.h"
+#include "cli/router.h"
 
-bool validate_raw_list(const RawArgList *list, int argc, int optind, char *const argv[]);
-bool validate_logic(const Settings *s);
+bool cli_validate_syntax(int argc, int optind, char *const argv[], const RawArgs *array, CravdataMode mode);
+bool cli_validate_logic(const Settings *s, CravdataMode mode);
 
 #endif

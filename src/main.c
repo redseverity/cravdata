@@ -1,40 +1,40 @@
 #include <stdlib.h>
-#include <getopt.h>
 #include <stdio.h>
+#include <getopt.h>
 
 #include "cli/args.h"
-#include "cli/fetch_args.h"
+#include "cli/router.h"
+#include "cli/input.h"
 #include "cli/validate.h"
 #include "settings/settings.h"
-#include "ui/display.h"
-#include "utils/utils.h"
+#include "ui/ui_settings.h"
 
-int main(int argc, char *argv[]){
-    RawArgList args;
+int main(int argc, char *argv[]) {
+    RawArgs array;
 
-    args_list_init(&args);
+    CravdataMode mode = cli_router(argc, argv);
 
-    if (argc == 1){
-        args_list_free(&args);
+    cli_args_init(&array);
+
+    cli_input_args(argc, argv, &array, mode);
+
+    if (!cli_validate_syntax(argc, optind, argv, &array, mode)) {
+        cli_args_free(&array);
         exit(EXIT_FAILURE);
     }
 
-    fetch_args(argc, argv, &args);
-
-    if (!validate_raw_list(&args, argc, optind, argv)) {
-        args_list_free(&args);
+    if (!settings_load_raw(&array, argc, argv, mode)) {
+        cli_args_free(&array);
         exit(EXIT_FAILURE);
     }
 
-    if (!settings_load_from_raw(&args)) {
-        args_list_free(&args);
+    cli_args_free(&array);
+
+    if (!cli_validate_logic(&settings, mode)) {
         exit(EXIT_FAILURE);
     }
-
-    args_list_free(&args);
-
-    if (!validate_logic(&settings)) exit(EXIT_FAILURE);
     
-    ui_display_setting(&settings);
-    return 0;
+    ui_render_settings(&settings, mode);
+
+    exit(EXIT_SUCCESS);
 }

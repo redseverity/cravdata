@@ -9,11 +9,11 @@ typedef struct {
 typedef struct args {
     int count;
     int capacity;
-    RawArg *args;
-} RawArgList;
+    RawArg *items;
+} RawArgs;
 
-void args_list_init(RawArgList *list);
-void args_list_add(RawArgList *list, char flag, const char *value);
-void args_list_free(RawArgList *list);
+void cli_args_init(RawArgs *array);
+void cli_args_add(RawArgs *array, char flag, const char *value);
+void cli_args_free(RawArgs *array);
 
 #endif

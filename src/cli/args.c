@@ -1,35 +1,36 @@
 #define _GNU_SOURCE
 #include <stdlib.h>
 #include <string.h>
+
 #include "cli/args.h"
 
-void args_list_init(RawArgList *list) {
-    list->count = 0;
-    list->capacity = 1;
-    list->args = malloc(list->capacity * sizeof(RawArg));
+void cli_args_init(RawArgs *array) {
+    array->count = 0;
+    array->capacity = 1;
+    array->items = malloc(array->capacity * sizeof(RawArg));
 }
 
-void args_list_add(RawArgList *list, char flag, const char *value) {
-    if (list->count >= list->capacity) {
-        list->capacity *= 2;
-        list->args = realloc(list->args, list->capacity * sizeof(RawArg));
+void cli_args_add(RawArgs *array, char flag, const char *value) {
+    if (array->count >= array->capacity) {
+        array->capacity *= 2;
+        array->items = realloc(array->items, array->capacity * sizeof(RawArg));
     }
 
-    list->args[list->count].flag = flag;
-    list->args[list->count].raw_value = value ? strdup(value) : NULL;
-    list->count++;
+    array->items[array->count].flag = flag;
+    array->items[array->count].raw_value = value ? strdup(value) : NULL;
+    array->count++;
 }
 
-void args_list_free(RawArgList *list) {
-    if (!list) return;
+void cli_args_free(RawArgs *array) {
+    if (!array) return;
     
-    for (int i = 0; i < list->count; i++) {
-        if (list->args[i].raw_value) {
-            free(list->args[i].raw_value);
+    for (int i = 0; i < array->count; i++) {
+        if (array->items[i].raw_value) {
+            free(array->items[i].raw_value);
         }
     }
-    free(list->args);
-    list->args = NULL;
-    list->count = 0;
-    list->capacity = 0;
+    free(array->items);
+    array->items = NULL;
+    array->count = 0;
+    array->capacity = 0;
 }

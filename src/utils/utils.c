@@ -4,7 +4,7 @@
 #include <stdarg.h>
 
 #include "utils/utils.h"
-#include "ui/display.h"
+#include "ui/ui_help.h"
 
 // Resolves option flag names dynamically from parsing context
 const char* utils_resolve_flag_name(int optopt_val, int optind_val, char *const argv[], char *buffer, size_t buf_len) {
@@ -39,7 +39,7 @@ void utils_disable_abbreviations(int longindex, int optind, char *const argv[], 
         
         if (strcmp(input_name, cli_options[longindex].name) != 0) {
             fprintf(stderr, "[!] Unrecognized option '%s' (abbreviations are disabled).\n\n", raw_arg);
-            ui_display_help_usage();
+            ui_render_usage();
             exit(EXIT_FAILURE);
         }
     }

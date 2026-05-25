@@ -5,11 +5,13 @@ OUT = $(BUILD_DIR)/$(NAME)
 SRC = \
 src/main.c \
 src/cli/args.c \
-src/cli/fetch_args.c \
+src/cli/router.c \
+src/cli/input.c \
 src/cli/validate.c \
 src/utils/utils.c \
 src/settings/settings.c \
-src/ui/display.c
+src/ui/ui_settings.c \
+src/ui/ui_help.c \
 
 CC = gcc
 CFLAGS = -Wall -Wextra -Iinclude -std=c99 -O3 -march=native
